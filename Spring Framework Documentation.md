@@ -1,4 +1,4 @@
-# Spring-Framework-Documentation-5.1.4-Chinese-localization
+# Spring Framework Documentation
 Version 5.1.4.RELEASE
 ---
 >What’s New, Upgrade Notes, Supported Versions, and other topics, independent of release cadence, are maintained externaly on the project’s [Github Wiki](https://github.com/spring-projects/spring-framework/wiki).
