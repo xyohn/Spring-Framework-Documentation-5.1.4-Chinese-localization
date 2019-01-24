@@ -73,7 +73,7 @@ The following diagram shows a high-level view of how Spring works. Your applicat
 下图显示了Spring如何工作的高级视图。您的应用程序类与配置元数据相结合，以便在创建和初始 化 ApplicationContext 之后，您拥有一个完全配置且可执行的系统或应用程序。
 
 
-![Figure 1. The Spring IoC container](https://docs.spring.io/spring/docs/current/spring-framework-reference/images/container-magic.png)
+![Figure 1. The Spring IoC container](https://docs.spring.io/spring/docs/current/spring-framework-reference/images/container-magic.png)  
 Figure 1. The Spring IoC container
 
 #### 1.2.1. Configuration Metadata 配置元数据
@@ -104,7 +104,7 @@ These bean definitions correspond to the actual objects that make up your applic
 
 这些 bean 定义对应于构成应用程序的实际对象。 通常，您定义服务层对象，数据访问对象（DAO），表示对象（如 Struts Action 实例），基础结构对象（如Hibernate SessionFactories，JMS队列等）。 通常，不会在容器中配置细粒度域对象，因为 DAO 和业务逻辑通常负责创建和加载域对象。 但是，您可以使用 Spring 与 AspectJ 的集成来配置在 IoC 容器控制之外创建的对象。 请参阅使用 AspectJ 使用 Spring 依赖注入域对象。
 
-The following example shows the basic structure of XML-based configuration metadata:
+The following example shows the basic structure of XML-based configuration metadata:  
 以下示例显示了基于XML的配置元数据的基本结构：
 
 ```xml
@@ -129,12 +129,12 @@ The following example shows the basic structure of XML-based configuration metad
 	id属性是一个标识单个bean定义的字符串。
 	The class attribute defines the type of the bean and uses the fully qualified classname.
 	class属性定义bean的类型并使用classname的全限定名
-The value of the id attribute refers to collaborating objects. The XML for referring to collaborating objects is not shown in this example. See Dependencies for more information.
+The value of the id attribute refers to collaborating objects. The XML for referring to collaborating objects is not shown in this example. See Dependencies for more information.    
 属性id的值指的是协作对象。 在此示例中未显示用于引用协作对象的XML。 有关更多信息，请参阅依赖项
 
 #### 1.2.2. Instantiating a Container 实例化容器
 
-The location path or paths supplied to an ApplicationContext constructor are resource strings that let the container load configuration metadata from a variety of external resources, such as the local file system, the Java CLASSPATH, and so on.
+The location path or paths supplied to an ApplicationContext constructor are resource strings that let the container load configuration metadata from a variety of external resources, such as the local file system, the Java CLASSPATH, and so on.  
 提供给 ApplicationContext 构造函数的位置路径是有关资源的字符串，它允许容器从各种外部资源（如本地文件系统，Java CLASSPATH等）加载配置元数据。
 
 ```java
@@ -143,7 +143,7 @@ ApplicationContext context = new ClassPathXmlApplicationContext("services.xml", 
 >After you learn about Spring’s IoC container, you may want to know more about Spring’s Resource abstraction (as described in Resources), which provides a convenient mechanism for reading an InputStream from locations defined in a URI syntax. In particular, Resource paths are used to construct applications contexts, as described in [Application Contexts and Resource Paths](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#resources-app-ctx).
 >在了解了Spring的IoC容器之后，您可能想要了解有关 Spring 的资源抽象的更多信息（如参考资料中所述），它提供了一种从URI语法中定义的位置读取InputStream的便捷机制。 特别是，资源路径用于构建应用程序上下文，如[Application Contexts and Resource Paths]中所述。
 
-The following example shows the service layer objects (```services.xml```) configuration file:
+The following example shows the service layer objects (```services.xml```) configuration file:  
 以下示例显示了服务层对象（```services.xml```）配置文件：
 
 ```xml
@@ -165,7 +165,7 @@ The following example shows the service layer objects (```services.xml```) confi
 
 </beans>
 ```
-The following example shows the data access objects ```daos.xml``` file:
+The following example shows the data access objects ```daos.xml``` file:  
 以下示例显示了数据访问对象```daos.xml```文件：
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -198,7 +198,7 @@ It can be useful to have bean definitions span multiple XML files. Often, each i
 
 让bean定义跨越多个XML文件会很有用。 通常，每个单独的XML配置文件都代表架构中的逻辑层或模块。
 
-You can use the application context constructor to load bean definitions from all these XML fragments. This constructor takes multiple``` Resource``` locations, as was shown in the previous section. Alternatively, use one or more occurrences of the``` <import/>``` element to load bean definitions from another file or files. The following example shows how to do so:
+You can use the application context constructor to load bean definitions from all these XML fragments. This constructor takes multiple``` Resource``` locations, as was shown in the previous section. Alternatively, use one or more occurrences of the``` <import/>``` element to load bean definitions from another file or files. The following example shows how to do so:  
 您可以使用应用程序上下文构造函数从所有这些XML片段加载bean定义。 这个构造函数需要多个```Resource```位置，如上一节所示。 或者，使用一个或多个```<import />```元素来从另一个或多个文件加载bean定义。 以下示例显示了如何执行此操作：
 
 ```xml
@@ -217,6 +217,7 @@ In the preceding example, external bean definitions are loaded from three files:
 
 >It is possible, but not recommended, to reference files in parent directories using a relative "../" path. Doing so creates a dependency on a file that is outside the current application. In particular, this reference is not recommended for ```classpath```: URLs (for example,```classpath:../services.xml```), where the runtime resolution process chooses the “nearest” classpath root and then looks into its parent directory. Classpath configuration changes may lead to the choice of a different, incorrect directory.
 使用相对“../”路径引用父目录中的文件是可以的，但不建议这么做。因为 这样做会对当前应用程序之外的文件创建依赖关系。 特别是，这个引用不建议用于```classpath```：URL（例如，```classpath：../ services.xml```），其中运行时解析过程选择“最近的”类路径根 然后查看其父目录。 类路径配置更改可能导致选择不同的，不正确的目录。
+
 >You can always use fully qualified resource locations instead of relative paths: for example, ```file:C:/config/services.xml ```or ```classpath:/config/services.xml```. However, be aware that you are coupling your application’s configuration to specific absolute locations. It is generally preferable to keep an indirection for such absolute locations — for example, through "${…}" placeholders that are resolved against JVM system properties at runtime.
 您始终可以使用完全限定的资源位置而不是相对路径：例如，```file：C：/config/services.xml```或```classpath：/ config / services.xml```。 但是，请注意您将应用程序的配置与特定的绝对位置耦合。 通常最好为这些绝对位置保持间接联系 - 例如，通过在运行时针对JVM系统属性解析的“$ {...}”占位符。
 
