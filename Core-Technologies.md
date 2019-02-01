@@ -23,7 +23,7 @@ This chapter covers Spring’s Inversion of Control (IoC) container.
 
 This chapter covers the Spring Framework implementation of the Inversion of Control (IoC) principle. (See [Inversion of Control](https://docs.spring.io/spring/docs/current/spring-framework-reference/overview.html#background-ioc).) IoC is also known as dependency injection (DI). It is a process whereby objects define their dependencies (that is, the other objects they work with) only through constructor arguments, arguments to a factory method, or properties that are set on the object instance after it is constructed or returned from a factory method. The container then injects those dependencies when it creates the bean. This process is fundamentally the inverse (hence the name, Inversion of Control) of the bean itself controlling the instantiation or location of its dependencies by using direct construction of classes or a mechanism such as the Service Locator pattern.
 
-本章介绍了控制反转（IoC）原理的 Spring Framework 实现。（参见控制反转。）IoC 也称为依赖注入（DI）。这是一个对象定义其依赖关系的过程（即，它们使用的其他对象）。这些对象只能通过构造函数的参数，工厂方法的参数或在从工厂方法构造或返回对象实例后在对象实例上设置的属性。 然后容器在创建 bean 时注入这些依赖项。此过程基本上是 bean本身的逆操作（因此得名控制反转），通过使用类的直接构造或诸如服务定位器模式的机制来控制其依赖关系的实例化或位置。
+本章介绍了控制反转（IoC）原理的 Spring Framework 实现。（参见控制反转）IoC 也称为依赖注入（DI）。这是一个对象定义其依赖关系的过程（即，它们使用的其他对象）。这些对象只能通过构造函数的参数，工厂方法的参数或在从工厂方法构造或返回对象实例后在对象实例上设置的属性。 然后容器在创建 bean 时注入这些依赖项。此过程基本上是 bean本身的逆操作（因此得名控制反转），通过使用类的直接构造或诸如服务定位器模式的机制来控制其依赖关系的实例化或位置。
 
 The `org.springframework.beans` and `org.springframework.context` packages are the basis for Spring Framework’s IoC container. The BeanFactory interface provides an advanced configuration mechanism capable of managing any type of object. ApplicationContext is a sub-interface of BeanFactory. It adds:
 
@@ -315,7 +315,7 @@ You can then use `getBean` to retrieve instances of your beans. The `Application
 
 A Spring IoC container manages one or more beans. These beans are created with the configuration metadata that you supply to the container (for example, in the form of XML `<bean/>` definitions).
 
-Spring IoC容器管理一个或多个bean。 这些bean是使用您提供给容器的配置元数据创建的（例如，以XML` <bean />`定义的形式）。
+Spring IoC 容器管理一个或多个 bean 。 这些 bean 是使用您提供给容器的配置元数据创建的（例如，以XML` <bean />`定义的形式）。
 
 Within the container itself, these bean definitions are represented as `BeanDefinition` objects, which contain (among other information) the following metadata:
 
@@ -348,5 +348,49 @@ This metadata translates to a set of properties that make up each bean definitio
 
 In addition to bean definitions that contain information on how to create a specific bean, the `ApplicationContext`implementations also permit the registration of existing objects that are created outside the container (by users). This is done by accessing the ApplicationContext’s BeanFactory through the `getBeanFactory()` method, which returns the BeanFactory `DefaultListableBeanFactory` implementation. `DefaultListableBeanFactory` supports this registration through the `registerSingleton(..)` and `registerBeanDefinition(..)` methods. However, typical applications work solely with beans defined through regular bean definition metadata.
 
+除了包含有关如何创建特定 bean 的信息的 bean 定义之外，`ApplicationContext` 还允许注册在容器外部（由用户创建）的现有对象。 这是通过`getBeanFactory（）`方法访问 ApplicationContext 的 BeanFactory 来完成的，该方法返回 BeanFactory 的 `DefaultListableBeanFactory` 实现。 `DefaultListableBeanFactory`通过`registerSingleton（..）`和`registerBeanDefinition（..）`方法支持这种注册。 但是，典型的应用程序仅用于通过常规 bean 定义元数据定义的 bean。
+
 >Bean metadata and manually supplied singleton instances need to be registered as early as possible, in order for the container to properly reason about them during autowiring and other introspection steps. While overriding existing metadata and existing singleton instances is supported to some degree, the registration of new beans at runtime (concurrently with live access to the factory) is not officially supported and may lead to concurrent access exceptions, inconsistent state in the bean container, or both.
 >
+>需要尽早注册Bean元数据和手动提供的单例实例，以便容器在自动装配和其他内省步骤期间正确推理它们。 虽然在某种程度上支持覆盖现有元数据和现有单例实例，但是在运行时注册新bean（与对工厂的实时访问同时）并未得到官方支持，并且可能导致并发访问异常，bean容器中的状态不一致，或者两者都发生。
+
+
+
+#### 1.3.1. Naming Beans 命名beans
+
+Every bean has one or more identifiers. These identifiers must be unique within the container that hosts the bean. A bean usually has only one identifier. However, if it requires more than one, the extra ones can be considered aliases.
+
+每个 bean 都有一个或多个标识符。 这些标识符在托管 bean 的容器中必须是唯一的。 bean 通常只有一个标识符。 但是，如果它需要多个，则额外的可以被视为别名。
+
+In XML-based configuration metadata, you use the `id` attribute, the `name` attribute, or both to specify the bean identifiers. The `id` attribute lets you specify exactly one id. Conventionally, these names are alphanumeric ('myBean', 'someService', etc.), but they can contain special characters as well. If you want to introduce other aliases for the bean, you can also specify them in the `name` attribute, separated by a comma (`,`), semicolon (`;`), or white space. As a historical note, in versions prior to Spring 3.1, the `id` attribute was defined as an `xsd:ID` type, which constrained possible characters. As of 3.1, it is defined as an `xsd:string`type. Note that bean `id` uniqueness is still enforced by the container, though no longer by XML parsers.
+
+在基于 XML 的元数据配置中，你可以使用 `id` 属性，`name ` 属性或两者来指定 bean 标识符。 `id` 属性允许您指定一个id。 通常，这些名称是字母数字（'myBean'，'someService'等），但它们也可以包含特殊字符。 如果要为bean 引入其他别名，还可以在 `name` 属性中指定它们，用逗号（`，`），分号（`;`）或空格分隔。 作为历史记录，在 Spring 3.1 之前的版本中，`id`属性被定义为`xsd：ID`类型，它约束了可能的字符。 从3.1开始，它被定义为`xsd：string`类型。 请注意，bean的“id”唯一性仍由容器强制执行，但不再由XML解析器强制执行。
+
+You are not required to supply a `name` or an `id` for a bean. If you do not supply a `name` or `id` explicitly, the container generates a unique name for that bean. However, if you want to refer to that bean by name, through the use of the `ref` element or a[Service Locator](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-servicelocator) style lookup, you must provide a name. Motivations for not supplying a name are related to using [inner beans](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-inner-beans)and [autowiring collaborators](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-factory-autowire).
+
+你不是一定需要为bean提供`name`或`id`。 如果没有显式提供`name`或`id`，容器会为该 bean 生成一个唯一的名称。 但是，如果你想通过名称引用那个 bean ，可以通过使用`ref`元素或[Service Locator](https://docs.spring.io/spring/docs/current/spring-framework-reference /core.html#beans-servicelocator)样式查找，您必须提供名称。 不提供名称的将作为 [内部bean](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-inner-beans) 和 [自动装配](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-factory-autowire)
+
+```
+Bean Naming Conventions Bean 命名约定
+The convention is to use the standard Java convention for instance field names when naming beans. That is, bean names start with a lowercase letter and are camel-cased from there. Examples of such names include accountManager, accountService, userDao, loginController, and so forth.
+命名的约定是在命名 bean 时使用标准 Java 约定作为实例字段名称。 也就是说，bean 名称以小写字母开头，并从那里开始驼峰。 示例包括accountManager，accountService，userDao，loginController等。
+Naming beans consistently makes your configuration easier to read and understand. Also, if you use Spring AOP, it helps a lot when applying advice to a set of beans related by name.
+命名 bean 始终使您的配置更易于阅读和理解。 此外，如果您使用Spring AOP，那么在将建议应用于与名称相关的一组 bean 时，它会有很大帮助。
+```
+
+```
+With component scanning in the classpath, Spring generates bean names for unnamed components, following the rules described earlier: essentially, taking the simple class name and turning its initial character to lower-case. However, in the (unusual) special case when there is more than one character and both the first and second characters are upper case, the original casing gets preserved. These are the same rules as defined by `java.beans.Introspector.decapitalize` (which Spring uses here).
+通过类路径中的组件扫描，Spring 按照前面描述的规则为未命名的组件生成bean名称：实质上，采用简单的类名并将其初始字符转换为小写。 但是，在（不常见的）特殊情况下，当有多个字符且第一个和第二个字符都是大写字母时，原始外壳将被保留。 这些规则与`java.beans.Introspector.decapitalize`（Spring在这里使用）定义的规则相同。
+```
+
+##### Aliasing a Bean outside the Bean Definition 为 bean 定义别名
+
+In a bean definition itself, you can supply more than one name for the bean, by using a combination of up to one name specified by the `id` attribute and any number of other names in the `name` attribute. These names can be equivalent aliases to the same bean and are useful for some situations, such as letting each component in an application refer to a common dependency by using a bean name that is specific to that component itself.
+
+在bean定义本身中，通过使用`id`属性指定的最多一个名称和`name`属性中的任意数量的其他名称，可以为bean提供多个名称。 这些名称可以是同一个bean的等效别名，对某些情况很有用，例如让应用程序中的每个组件通过使用特定于该组件本身的bean名称来引用公共依赖项。
+
+Specifying all aliases where the bean is actually defined is not always adequate, however. It is sometimes desirable to introduce an alias for a bean that is defined elsewhere. This is commonly the case in large systems where configuration is split amongst each subsystem, with each subsystem having its own set of object definitions. In XML-based configuration metadata, you can use the `<alias/>` element to accomplish this. The following example shows how to do so:
+但是，指定实际定义 bean 的所有别名并不总是足够的。 有时需要为其他地方定义的 bean 引入别名。 在大型系统中通常就是这种情况，其中配置在每个子系统之间分配，每个子系统具有其自己的一组对象定义。 在基于XML的配置元数据中，您可以使用`<alias />`元素来完成此任务。 以下示例显示了如何执行此操作：
+
+
+
